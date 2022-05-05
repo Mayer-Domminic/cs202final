@@ -22,6 +22,7 @@ public:
 	*/
 	void readFile(string path);
     void setData(vector<vector<float>> newDatav);
+	void writeToFile(WavManager wave, string filename);
     vector<vector<float>> getData();
     wav_header getHeader();
     string getName();

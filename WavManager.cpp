@@ -57,3 +57,29 @@ void WavManager::readFile(string path) {
 	}
 	delete[] buffer;
 }
+
+void WavManager::writeToFile(WavManager wave, string filename) {
+	vector<vector<float>> soundData = wave.getData();
+	wav_header header = wave.getHeader();
+
+	ofstream fileOutput(filename, ios::binary | ios::out);
+	fileOutput.write((char*)&header, sizeof(header));
+
+	int maxSize = pow(2, header.bits_per_sample - 1);
+
+	if (header.num_channels == 1) {
+		for (int i = 0; i < soundData[0].size(); i++) {
+			short number = soundData[0].at(i) * maxSize;
+			fileOutput.write((char*)&number, 2);
+		}
+	} else {
+		for (int i = 0; i < soundData[1].size(); i++) {
+			short number = soundData[0].at(i) * maxSize;
+			fileOutput.write((char*)&number, 2);
+			number = soundData[1].at(i) * maxSize;
+			fileOutput.write((char*)&number, 2);
+		}
+	}
+
+	fileOutput.close();
+}

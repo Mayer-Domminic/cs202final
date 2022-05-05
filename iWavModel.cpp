@@ -6,56 +6,45 @@
 #include <sstream>
 using namespace std;
 
+void iWavModel::readFile(string newFile) {
+	wave.readFile(newFile);
+}
+
+void iWavModel::writeFile(string outFile) {
+	wave.writeToFile(wave, outFile);
+}
+
 vector<vector<float>> iWavModel::getData() {
-	return soundData;
+	return wave.getData();
 }
 
 void iWavModel::setData(vector<vector<float>> newData) {
-	soundData = newData;
-}
-
-wav_header iWavModel::getHeader() {
-	return header;
-}
-
-FileAttributes iWavModel::openFile(const string &filename){
-	ifstream file(filename, ios::binary | ios::in);
-	short* buffer = nullptr;
-
-	if(file.is_open()){
-
-		file.read((char*)&header, 20);
-		file.read((char*)&header + 20, header.subchunk1_size);
-		file.read((char*)&header + 20 + header.subchunk1_size, 8);
-
-		buffer = new short[header.data_bytes];
-		file.read((char*)buffer, header.data_bytes);
-
-		int maxSize = pow(2, header.bits_per_sample - 1);
-		int upperBound = header.data_bytes / header.block_align * header.num_channels;
-
-		if(header.num_channels == 1){
-			for(int i = 0; i < upperBound; i++){
-				soundData[0].push_back((float)buffer[i] / maxSize); //second arg in power is max value of the bitrate
-			}
-		} else {
-			soundData.push_back({});
-			for(int i = 0; i < upperBound; i++){
-				if(i % 2 == 0) {
-					soundData[0].push_back((float)buffer[i] / maxSize); //left ear bit 1
-				} else {
-					soundData[1].push_back((float)buffer[i] / maxSize); //right ear bit 1
-				}
-			}
-		}
-		file.close();
-	}
-	delete[] buffer;
+	wave.setData(newData);
 }
 
 string iWavModel::getAttributes() {
 	stringstream attributes;
-	string name = "";
+	string name = wave.getName();
 
-	
+	attributes << "File Name: " + name << endl;
+	attributes << "Sample Rate: " + to_string(wave.getHeader().sample_rate) << endl;
+	attributes << "Bits per Sample: " + to_string(wave.getHeader().bits_per_sample) << endl;
+
+	if (wave.getHeader().num_channels == 1) {
+		attributes << "Format: Mono " << endl;
+	} else {
+		attributes << "Format: Stereo " << endl;
+	}
+
+	wav_header header = wave.getHeader();
+	float len = ((float)header.data_bytes) / ((header.sample_rate * header.num_channels * header.bits_per_sample) / 8);
+
+	if (len > 60) {
+		len = len / 60;
+		attributes << "Audio Length (mins): " + to_string(len) << endl;
+	} else {
+		attributes << "Audio Length (secs): " + to_string(len) << endl;
+	}
+
+	return attributes.str();	
 }
