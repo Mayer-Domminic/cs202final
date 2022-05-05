@@ -2,6 +2,7 @@
 #define CONTROLLER_H
 
 #include "Console.h"
+#include "iWavModel.h"
 
 class Controller {
     private:

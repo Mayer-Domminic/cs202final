@@ -1,7 +1,6 @@
 #include "Controller.h"
 #include <vector>
 //#include "FileAttributes.h"
-#include "iWavModel.h"
 
 bool Controller::run() {
     //user input file name
