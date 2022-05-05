@@ -8,5 +8,6 @@ int main(){
 	Controller controller;
 	controller.setConsole(&console);
 	controller.run();
+	
 	return 0;
 }

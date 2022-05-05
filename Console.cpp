@@ -1,4 +1,4 @@
-#include <Console.h>
+#include "Console.h"
 #include <iostream>
 #include <string>
 
@@ -23,19 +23,23 @@ string Console::getFileName() {
         switch (file) {
             case 0:
                 filename = "8bit-mono.wav";
-                cout << "8bit-mono.wav";
+                cout << "8bit-mono.wav" << endl;
+                BREAK = true;
                 break;
             case 1:
                 filename = "8bit-stereo.wav";
-                cout << "8bit-stereo.wav";
+                cout << "8bit-stereo.wav" << endl;
+                BREAK = true;
                 break;
             case 2:
                 filename = "16bit-mono.wav";
-                cout << "16bit-mono.wav";
+                cout << "16bit-mono.wav" << endl;
+                BREAK = true;
                 break;
             case 3:
                 filename = "16bit-stereo.wav";
-                cout << "16bit-stereo.wav";
+                cout << "16bit-stereo.wav" << endl;
+                BREAK = true;
                 break;
             default:
                 BREAK = true;
@@ -43,6 +47,44 @@ string Console::getFileName() {
         }
     }
     return filename;
+}
+
+
+std::vector<std::string> Console::getProcessList() {
+    std::vector<std::string> processList;
+    bool BREAK = false, e=false, n=false;
+    int file;
+
+    std::cout << "What would you like to do to the audio file? " << std::endl;
+
+    while (BREAK != true) {
+        std::cout << "\n - (0) Quit" << std::endl;
+        std::cout << " - (1) Echo" << std::endl;
+        std::cout << " - (2) Normalize" << std::endl;
+        std::cin >> file;
+
+        //case handling
+        switch (file) {
+            case 1:
+                if (e!=true) {
+                    processList.push_back("Echo");
+                    std::cout << "Echo added" << std::endl;
+                    e=true;
+                }
+                break;
+            case 2:
+                if (n!=true) {
+                    processList.push_back("Normalize");
+                    std::cout << "Normalize added" << std::endl;
+                    n=true;
+                }
+                break;
+            default:
+                BREAK = true;
+                break;
+        }
+    }
+    return processList; 
 }
 
 string Console::getOutputFileName() {

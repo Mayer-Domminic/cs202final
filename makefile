@@ -1,16 +1,14 @@
-project: main.o wavManager.o iWavModel.o waveManager Controller.o Console.o
-	g++ -std=c++11 -o project main.o wavManager.o iWavModel.o waveManager.o Controller.o Console.o
-main.o: main.cpp
-	g++ -std=c++11 -c main.cpp
-wavManager.o: WavManager.h
-	g++ -std=c++11 -c WavManager.h
-iWavModel.o: iWavModel.cpp
-	g++ -std=c++11 -c iWavModel.cpp
-waveManager.o: WaveHeader.h
-	g++ -std=c++11 -c WaveHeader.h
-Controller.o: Controller.cpp
-	g++ -std=c++11 -c Controller.cpp
-Console.o: Console.cpp
-	g++ -std=c++11 -c Console.cpp	
+project: WaveHeader.o iWavModel.o WavManager.o Controller.o Console.o main.cpp
+	g++ -std=c++11 -o project WaveHeader.o iWavModel.o WavManager.o Controller.o Console.o main.cpp
+WaveHeader.o: WaveHeader.cpp WaveHeader.h
+	g++ -c -std=c++11 WaveHeader.cpp
+iWavModel.o: iWavModel.cpp iWavModel.h
+	g++ -c -std=c++11 v.cpp
+WavManager.o: WavManager.cpp WavManager.h
+	g++ -c -std=c++11 WavManager.cpp
+Controller.o: Controller.cpp Controller.h
+	g++ -c -std=c++11 Controller.cpp
+Console.o: Console.cpp Console.h
+	g++ -c -std=c++11 Console.cpp
 clean:
-	rm *.o 
+	rm *.o

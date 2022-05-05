@@ -7,7 +7,7 @@
 class Controller {
     private:
         Console *console;
-        iWavModel *model;
+        iWavModel model;
     public:
         bool run();
         void setConsole(Console *console);

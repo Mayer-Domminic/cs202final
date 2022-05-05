@@ -5,9 +5,10 @@
 bool Controller::run() {
     //user input file name
     std::string fileName = console->getFileName();
-    model->readFile(fileName);
-    //std::vector<std::string> processList = model->getProcessList();
-    //console -> // call the console
+    model.readFile(fileName);
+    std::vector<std::string> processList = console->getProcessList();
+    string attr = model.getAttributes();
+    cout << attr << endl;
 
     return false;
 }
