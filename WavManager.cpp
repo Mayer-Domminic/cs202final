@@ -1,25 +1,30 @@
-#include "iWavModel.h"
 #include "WavManager.h"
-#include "WaveHeader.h"
-
 #include <iostream>
-#include <sstream>
+#include <fstream>
+#include <cmath>
+#include <vector>
+
 using namespace std;
 
-vector<vector<float>> iWavModel::getData() {
-	return soundData;
-}
-
-void iWavModel::setData(vector<vector<float>> newData) {
+//retrieve data
+void WavManager::setData(vector<vector<float>> newData) {
 	soundData = newData;
 }
 
-wav_header iWavModel::getHeader() {
+vector<vector<float>> WavManager::getData() {
+	return soundData;
+}
+
+wav_header WavManager::getHeader() {
 	return header;
 }
 
-FileAttributes iWavModel::openFile(const string &filename){
-	ifstream file(filename, ios::binary | ios::in);
+string WavManager::getName() {
+    return filename;
+}
+
+void WavManager::readFile(string path) {
+    ifstream file(path, ios::binary | ios::in);
 	short* buffer = nullptr;
 
 	if(file.is_open()){
@@ -51,11 +56,4 @@ FileAttributes iWavModel::openFile(const string &filename){
 		file.close();
 	}
 	delete[] buffer;
-}
-
-string iWavModel::getAttributes() {
-	stringstream attributes;
-	string name = "";
-
-	
 }

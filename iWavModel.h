@@ -2,7 +2,7 @@
 #define FEED_BACK_ECHO_IWAVEMODEL_H
 
 #include "FileAttributes.h"
-#include "Console.h"
+#include "Controller.h"
 #include "WaveHeader.h"
 
 #include <vector>
@@ -11,8 +11,7 @@ using namespace std;
 
 class iWavModel {
 private:
-	wav_header header;
-	vector<vector<float>> soundData = {{}}; // priv 2d vector
+	WavManager wave;
 public:
 	/*
 	virtual FileAttributes openFile(const std::string &file_name)=0;
@@ -21,6 +20,11 @@ public:
 	virtual void processFile(const std::string& processID)=0;
 	*/
 	FileAttributes openFile(const string &filename); // add virtual & =0 for bs
+	wav_header getHeader();
+	vector<vector<float>> getData();
+	void setData(vector<vector<float>> newData);
+	string getAttributes();
+	string getFilename();
 };
 
 #endif //FEED_BACK_ECHO_IWAVEMODEL_H
