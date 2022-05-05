@@ -1,0 +1,149 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <cstdint>
+
+
+using std::cin;
+using std::cout;
+using std::endl;
+using std::fstream;
+using std::string;
+
+typedef struct header_file{
+    char c_id[4];
+    int c_size;
+    char fmt[4];
+    char subC1_id[4];
+    int subC1_size;
+    short int audio_fmt;
+    short int number_channels;
+    int sampleRate;                     // sample_rate denotes the sampling rate.
+    int byteRate;
+    short int blockAlign;
+    short int bits_perSample;
+    char subC2_id[4];
+    int subC2_size;                     // subchunk2_size denotes the number of samples.
+} header;
+
+typedef struct sample{
+        int val;
+};
+
+
+// Function prototypes
+int getFileSize(FILE* inFile);
+
+int main(int argc, char* argv[])
+{
+    header wavHeader;
+    sample value;
+    int headerSize = sizeof(header), count = 0;
+        
+    const char* filePath;
+    string input;
+    
+    one:
+            cout<<"Choice:\n[1]\tRead File\n[2]\t quit.\n\nchoice:";
+            char ch;
+            cin>>ch;
+            if(ch=='1'){
+                    cout<<"Input wave file name: ";
+                    cin>>input;
+                    cin.get();
+                    filePath=input.c_str();
+                }
+                else if(ch=='2'){
+                        return 1;
+                }
+                else{
+                        cout<<"try again...\n";
+                        goto one;
+                }
+        unsigned char buffer4[4];
+        
+        int read;
+        
+    FILE* AudioFile = fopen(filePath, "rb");
+    
+    if (AudioFile == nullptr){
+        cout<<"Unable to open wave file: "<<filePath<<endl;
+        return 0;
+    }
+        FILE * outfile = fopen("Echoed_output.wav","wb");               // Create output ( wave format) file in write mode
+    //Read the header
+    size_t bytesRead = fread(&wavHeader, 1, headerSize, AudioFile);
+    fwrite(&wavHeader,1, headerSize, outfile);
+    cout<<"\nfilename:\t"<<filePath<<endl;
+    if (bytesRead > 0)
+    {
+        //Read the data
+        sample init_samples[wavHeader.sampleRate];//storing sample per second to make for echo effect
+        
+        long size_of_each_sample = (wavHeader.number_channels * wavHeader.bits_perSample) ;
+        read = fread(buffer4, sizeof(buffer4), 1, AudioFile);
+                unsigned int data_size=buffer4[0] | (buffer4[1] << 8) | (buffer4[2] << 16) | (buffer4[3] << 24 );
+                
+        long num_samples = (8 * wavHeader.subC2_size) / (wavHeader.number_channels * wavHeader.bits_perSample);
+        
+
+        // Display the sampling Rate from the header
+        cout<<"Sampling Rate                      :"<<wavHeader.sampleRate<<"Hz"<<endl;
+        cout<<"Bytes Per Sample                   :"<<wavHeader.bits_perSample/8<<endl;
+        cout<<"Number of channels         :"<<wavHeader.number_channels;
+        if(wavHeader.number_channels>1){
+                cout<<"(Stereo)\n";
+                }
+                else{
+                        cout<<"(Mono)\n";
+                }
+        cout<<"Number of Samples          :"<<(wavHeader.subC2_size * 8)/(wavHeader.bits_perSample*2)<<endl;
+        
+        
+        float max=0;
+        float min=1;
+        float dat;
+        
+                while((read = fread(&value, sizeof(value), 1, AudioFile))>0){                    
+                        int flag=0;
+                        //adding gains for echo
+                        if(count>wavHeader.sampleRate){//for 1st sec;
+                                value.val+=init_samples[count%wavHeader.sampleRate].val;
+                                flag=1;
+                        }
+                        
+                        
+                        dat=value.val;
+                        if(dat>max)max=dat;
+                        if(dat<min)min=dat;
+                        
+                        init_samples[count%wavHeader.sampleRate].val+=value.val*0.4;//scaling value with echo gain filter.
+                        
+                        if(flag){
+                                value.val+=init_samples[count%wavHeader.sampleRate].val;
+                        }
+                        count++;
+                        fwrite(&value,1,sizeof(value) , outfile);
+                        //cout<<dat<<endl;
+                } 
+                
+        float scale=(float)INT_MAX/max;
+        cout<<"\n\nProcessing\n";
+        cout<<"Echoed with gain of 0.4 and for 2 seconds.\n";
+        cout<<"Maximum: "<<max<<" After Echo Effect"<<endl;
+        cout<<"Minimum: "<<min<<" After Echo Effect"<<endl;
+        cout<<"Scale Factor: "<<scale<<endl;
+        //cout<<sizeof(init_samples);
+        cout<<"\n\nScalling Values by factor "<<scale<<endl;
+        fseek(AudioFile,headerSize,0);
+        fseek(outfile,headerSize,0);
+        while((read = fread(&value, sizeof(value), 1, AudioFile))>0){
+                        value.val*scale;
+                        fwrite(&value,1,sizeof(value) , outfile);
+                }
+                cout<<"\nFile scaled and Saved to Output.wav\nThank You";
+    }
+    fclose(AudioFile);
+    fclose(outfile);
+    return 0;
+}
