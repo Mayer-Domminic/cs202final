@@ -1,9 +1,10 @@
 #include "iWavModel.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
+#include <fstream>
+#include <cmath>
 using namespace std;
 
-FileAttributes openFile(const string &filename){
+FileAttributes iWavModel::openFile(const string &filename){
 	ifstream file(filename, ios::binary | ios::in);
 	short* buffer = nullptr;
 
@@ -21,15 +22,15 @@ FileAttributes openFile(const string &filename){
 
 		if(header.num_channels == 1){
 			for(int i = 0; i < upperBound; i++){
-				data[0].push_back((float)buffer[i] / maxSize); //second arg in power is max value of the bitrate
+				soundData[0].push_back((float)buffer[i] / maxSize); //second arg in power is max value of the bitrate
 			}
 		} else {
-			data.push_back({});
+			soundData.push_back({});
 			for(int i = 0; i < upperBound; i++){
 				if(i % 2 == 0) {
-					data[0].push_back((float)buffer[i] / maxSize); //left ear bit 1
+					soundData[0].push_back((float)buffer[i] / maxSize); //left ear bit 1
 				} else {
-					data[1].push_back((float)buffer[i] / maxSize); //right ear bit 1
+					soundData[1].push_back((float)buffer[i] / maxSize); //right ear bit 1
 				}
 			}
 		}
