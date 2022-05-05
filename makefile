@@ -2,8 +2,8 @@ project: main.o wavManager.o iWavModel.o waveManager Controller.o Console.o
 	g++ -std=c++11 -o project main.o wavManager.o iWavModel.o waveManager.o Controller.o Console.o
 main.o: main.cpp
 	g++ -std=c++11 -c main.cpp
-wavManager.o: wavManager.h
-	g++ -std=c++11 -c wavManager.h
+wavManager.o: WavManager.h
+	g++ -std=c++11 -c WavManager.h
 iWavModel.o: iWavModel.cpp
 	g++ -std=c++11 -c iWavModel.cpp
 waveManager.o: WaveHeader.h
