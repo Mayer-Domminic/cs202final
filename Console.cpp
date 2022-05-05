@@ -49,6 +49,6 @@ string Console::getOutputFileName() {
     string filename;
     cout << "Please enter an output file name without .wav: " << endl;
     cin >> filename;
-    filename >> filename >> ".wav";
+    filename = filename + ".wav";
     return filename;
 }
