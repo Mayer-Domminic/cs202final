@@ -1,13 +1,13 @@
-project: main.o Normalization.o iWavModel.o Echo.o Controller.o Console.o
-	g++ -std=c++11 -o project main.o Normalization.o iWavModel.o Echo.o Controller.o Console.o
+project: main.o wavManager.o iWavModel.o waveManager Controller.o Console.o
+	g++ -std=c++11 -o project main.o wavManager.o iWavModel.o waveManager.o Controller.o Console.o
 main.o: main.cpp
 	g++ -std=c++11 -c main.cpp
-Normalization.o: Normalization.cpp
-	g++ -std=c++11 -c Normalization.cpp
+wavManager.o: wavManager.h
+	g++ -std=c++11 -c wavManager.h
 iWavModel.o: iWavModel.cpp
 	g++ -std=c++11 -c iWavModel.cpp
-Echo.o: Echo.cpp
-	g++ -std=c++11 -c Echo.cpp
+waveManager.o: WaveHeader.h
+	g++ -std=c++11 -c WaveHeader.h
 Controller.o: Controller.cpp
 	g++ -std=c++11 -c Controller.cpp
 Console.o: Console.cpp
