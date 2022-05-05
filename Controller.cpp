@@ -1,12 +1,12 @@
 #include "Controller.h"
 #include <vector>
-#include "FileAttributes.h"
+//#include "FileAttributes.h"
 #include "iWavModel.h"
 
 bool Controller::run() {
     //user input file name
     std::string fileName = console->getFileName();
-    FileAttributes attributes = model->openFile(fileName);
+    model->readFile(fileName);
     //std::vector<std::string> processList = model->getProcessList();
     //console -> // call the console
 
