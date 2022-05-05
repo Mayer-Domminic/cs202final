@@ -3,7 +3,7 @@
 #include <cmath>
 #include <algorithm>
 
-vector<float> Processor::echo(const vector<float> input, float gain, int delay, int decay) {
+vector<float> Processor::echo(const vector<float> input, float gain, int delay) {
     vector<float> output;
     auto decay = log(0.01)/log(gain);
     int new_size = int(input.size() + delay * decay);

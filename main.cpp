@@ -1,6 +1,5 @@
 #include <iostream>
 #include "iWavModel.h"
-#include "Echo.h"
 #include "Controller.h"
 
 int main(){

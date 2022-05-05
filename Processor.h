@@ -7,7 +7,7 @@ using namespace std;
 
 class Processor{
 	public:
-		vector<float> echo(const vector<float> input, float gain, int delay, int decay);
+		vector<float> echo(const vector<float> input, float gain, int delay);
         vector<float> norm(vector<float> data);
 };
 
