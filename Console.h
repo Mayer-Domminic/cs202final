@@ -4,13 +4,15 @@
 #include <vector>
 #include <string>
 
-class Console {
-    private:
+using namespace std;
 
-    public:
-        std::string getFileName();
-        std::vector<std::string> getProcessList(); 
-        //other functions?
+class Console {
+private:
+
+public:
+    string getFileName();
+    vector<string> getProcessList(); 
+    string getOutputFileName();
 };
 
 
